@@ -48,7 +48,8 @@ Abra a pasta `projetos/{slug}/criativos/banners/`: existe um `.png` em cada um d
 |---|---|---|---|
 | V1 | Cores/fontes erradas (azul/roxo genérico de IA) | o `DESIGN.md` não existe ou está na pasta errada | confira `projetos/{slug}/DESIGN.md` → rode `/criativos-funil` de novo |
 | V2 | Texto genérico/inventado no banner | faltou `copy.md`, ou você pulou a curadoria do briefista | volte ao passo 2 (curar 2–3 finalistas) e gere de novo |
-| V3 | PNG não gerou (só ficou o `.html`) | Chrome/Edge não encontrado | instale o Chrome OU abra o `.html` no navegador e tire um screenshot no tamanho exato do formato (o fallback oficial da skill) — o Gerenciador só aceita imagem, não PDF |
+| V3 | PNG não gerou (só ficou o `.html`) e o script diz `! falhou` | **Se a linha `Chrome:` no topo mostrou um navegador**, ele FOI encontrado — a falha é outra (veja V6). Se não mostrou, aí sim é Chrome/Edge ausente | instale o Chrome OU abra o `.html` no navegador e tire um screenshot no tamanho exato do formato (o fallback oficial da skill) — o Gerenciador só aceita imagem, não PDF |
+| V6 | `! falhou` mesmo com o navegador encontrado, ou o 1º formato sai e o 2º não (Windows) | bugs corrigidos em 24/07/2026 no `gerar_png.sh`: caminho de saída não convertido pelo `cygpath`, falta de `--user-data-dir` e a flag `--default-background-color` que o **Edge** rejeita | atualize o projeto (`git pull` — [guia-atualizar-projeto](../01-pre-requisitos/guia-atualizar-projeto.md)) e rode de novo; o script agora mostra o erro real do navegador em vez de engolir |
 | V4 | Layout quebrado / texto cortado na borda (o 9:16 é o que mais corta) | ajuste fino do formato | peça na conversa: "refaça o banner X, o texto está cortando na borda inferior" — UM banner por vez, não o lote |
 | V5 | Continua ruim depois de tudo | falta parâmetro de comparação | abra `mapa-skills-samples/academia-fit/criativos/banners/` (o padrão esperado) → cole o exemplo + o seu na conversa e peça "iguale a qualidade deste exemplo" → se persistir: print dos dois + "pesquise por que meu banner sai abaixo disso" |
 
@@ -58,7 +59,7 @@ Abra a pasta `projetos/{slug}/criativos/banners/`: existe um `.png` em cada um d
 |---|---|---|
 | **`/criativos-funil`** (este guia — o caminho simples) | banners PNG reais (4:5, 9:16, 1:1) na sua identidade + roteiros de vídeo | **grátis** (usa o Chrome/Edge do seu PC; a coleta de concorrente usa a cota grátis do Apify) |
 | **`/conteudo-funil`** | carrosséis PNG (1080×1350) para orgânico, mesmo motor | **grátis** |
-| **`/ads-creative-factory`** (avançado) | imagens geradas por IA em 8 estilos (editorial, pessoa real, UGC, mockup, comparativo, chat, tweet), com gate automático de marca e melhor-de-N | **exige assinatura ChatGPT** (a imagem sai pelo Codex CLI logado — chave de API não serve). Guia próprio em breve; por ora, só para quem já tem Codex funcionando |
+| **`/ads-creative-factory`** (avançado) | imagens geradas por IA em 8 estilos (editorial, pessoa real, UGC, mockup, comparativo, chat, tweet), com gate automático de marca e melhor-de-N | **exige assinatura ChatGPT** (a imagem sai pelo Codex CLI logado — chave de API não serve). Guia próprio: **[guia-ads-creative-factory.md](guia-ads-creative-factory.md)** (erros CF1–CF8) |
 
 > Vídeo pronto NÃO é gerado por nenhuma skill — o que sai são **roteiros** pra você gravar. Mockups de produto saem como **prompts** (`/mockup-produto-funil`) pra colar na ferramenta de imagem que você tiver.
 > Gravou os roteiros? As duas métricas que dizem se o VÍDEO funciona (referência de mercado): **Hook Rate** (% que segue assistindo após os primeiros 3–5 s — mede o gancho) e **Hold Rate** até o CTA (mede a copy). A leitura entra no ritual do [guia-e-depois](guia-e-depois.md).
@@ -85,4 +86,5 @@ Pode — entendendo o papel de cada peça:
 |---|---|
 | ▶️ Fazer | confira os PNGs finais na pasta `criativos/banners/` contra o gate da amostra (passo 4) — só 2–3 APROVADOS seguem adiante |
 | 📖 Ler | **[guia-campanha-no-ar.md](guia-campanha-no-ar.md)** (zelador → estruturador → Gerenciador) |
+| ⬆️ Subir de nível | banner de texto já não diferencia? **[guia-ads-creative-factory.md](guia-ads-creative-factory.md)** — imagem gerada por IA (exige assinatura ChatGPT) |
 | 🚑 Se travar | o catálogo V1–V5 acima — e compare sempre com o exemplo `mapa-skills-samples/academia-fit/criativos/banners/` |

@@ -35,17 +35,25 @@
 
 ### 4. Conta de anúncios
 1. Business settings → **Contas → Contas de anúncios → Adicionar → "Criar uma nova conta de anúncios"**.
-2. Nome · **fuso (GMT-03:00) São Paulo** · **moeda BRL**. ⚠️ **Fuso e moeda NÃO mudam depois** — errou, só criando outra conta.
+2. Nome · **fuso (GMT-03:00) São Paulo** · **moeda BRL**. ⚠️ **Fuso e moeda NÃO mudam depois** — errou, só criando outra conta. A Meta **preenche os dois sozinha** com um palpite pelo seu local: **não passe batido**, confira e corrija ANTES de criar.
+   - **Como conferir depois de criada** (faça agora, antes de seguir): business settings → **Contas → Contas de anúncios → (sua conta)** → o painel da direita mostra **Moeda** e **Fuso horário**. Errado? → erro **F6**.
 3. "Será usada para" → **Meu negócio** → Criar.
 4. Adicione você mesmo com **"Gerenciar conta de anúncios"**.
 5. ⚠️ Conta recém-criada tem **limites de novato por padrão** (nº de contas = 1 até o primeiro pagamento confirmado; teto de gasto diário baixo no começo). É normal — os limites sobem sozinhos com histórico de pagamento (erro F4).
 
-### 5. Verificação de Empresa (recomendada — destrava quase tudo)
+### 5. Verificação de Empresa (recomendada — destrava quase tudo, mas **NÃO bloqueia você agora**)
 1. Business settings → **Central de Segurança → Verificação da empresa**.
-2. Hoje é simples: sobe o **CNPJ** (aceita **MEI**) → a Meta cruza com os dados públicos → pode **ligar no telefone cadastrado no CNPJ** com um código.
-3. Prazo: **1 a alguns dias úteis**. Faça AGORA em paralelo — é o destravador dos erros F1, F2 e do Usuário do Sistema em BM novo.
+2. Hoje é simples: sobe o **CNPJ** (aceita **MEI**) → a Meta cruza com os dados públicos → pode **ligar ou mandar SMS no telefone cadastrado no CNPJ** com um código.
+3. Prazo: **1 a alguns dias úteis**. Dispare e **siga em frente** — ela roda em segundo plano. É o destravador dos erros F1, F2 e do Usuário do Sistema em BM novo.
+
+> ⚠️ **Não fique parado nesta tela.** Esta é a etapa que mais prende aluno à toa: ela **não é pré-requisito** para criar app, gerar token, ler a conta nem habilitar escrita via API. Dispare (ou nem dispare) e vá para o passo 6.
+>
+> ⚠️ **O telefone aqui NÃO é o seu — é o do CNPJ**, puxado do registro público da Receita, e em muitos casos está **antigo/desativado**. Você não escolhe esse número e não muda pela Meta. Se o código nunca chega, **não insista**: veja o erro **F11** (verificação por documento) e siga o resto do guia normalmente.
 
 ### 6. Forma de pagamento
+
+> 💡 **Só vai TESTAR a API por enquanto, sem anunciar?** O pagamento é **dispensável nesta fase**: token, leitura (`"modo":"api"`) e até o teste de escrita funcionam sem cartão cadastrado. Pule para o passo 7 e volte aqui quando for colocar campanha no ar — aí ele vira **obrigatório**. (O `/zelador` vai acusar `pagamento_aprovado: false` — é esperado, não é defeito.)
+
 1. Business settings → **Pagamentos** (ou Ads Manager → engrenagem → Configurações de pagamento) → selecione a conta → **"Adicionar forma de pagamento"**.
 2. Brasil: **cartão de crédito** (pós-pago — o recomendado). Boleto/Pix (pré-pago) existe, mas ⚠️ **evite como forma principal**: se a conta for bloqueada (comum em conta nova — erro F1), o saldo pré-pago **fica preso** até a análise resolver; no cartão pós-pago não há dinheiro parado (referência de mercado). Use o pré-pago só como plano B do erro F5.
 3. **Prova de sucesso:** a tela de pagamentos **sem nenhum aviso vermelho**.
@@ -60,9 +68,9 @@
 Checklist final — tudo precisa estar ✅:
 - [ ] `business.facebook.com/settings` abre com o SEU negócio no topo
 - [ ] Página com logo + Instagram profissional vinculado
-- [ ] Conta de anúncios ativa, fuso São Paulo, moeda BRL
-- [ ] Pagamentos **sem aviso vermelho**
-- [ ] Verificação de Empresa enviada (ou aprovada)
+- [ ] Conta de anúncios ativa — **confira moeda BRL e fuso São Paulo na tela da conta** (passo 4.2); estes dois não têm conserto depois
+- [ ] Pagamentos **sem aviso vermelho** — *(só vai testar a API? pode ficar pendente, ver passo 6)*
+- [ ] Verificação de Empresa enviada (ou aprovada) — *(pendente não bloqueia: siga mesmo assim)*
 - [ ] Domínio verificado OU pendência anotada
 Se já tiver o token (próximo guia): `node scripts/zelador-audit.mjs --json` confirma BM/conta/pagamento pela API.
 
@@ -83,12 +91,15 @@ Se já tiver o token (próximo guia): `node scripts/zelador-audit.mjs --json` co
 | **F9** | Verificação de Empresa **recusada** | dados do CNPJ divergem do nome/endereço no BM | iguale o nome legal e endereço do BM aos do CNPJ (business settings → Informações da empresa) e reenvie; MEI é aceito |
 | **F10** | "Você não tem permissão" dentro do BM de OUTRO (agência/cliente te deu acesso) | os "poderes" recebidos podem ser parciais (ex.: só analista da conta, sem acesso ao BM ou às Páginas) | business settings → Usuários → veja SEU papel em cada ativo; peça ao dono exatamente o que falta ("me dá Gerenciar conta de anúncios na conta X e acesso ao app Y"); pra APRENDER sem risco: monte a fundação própria deste guia em paralelo. E quando VOCÊ for o dono: gestor/agência recebe **ACESSO, nunca propriedade** — BM, pixel e Página ficam sempre no SEU nome (referência de mercado) |
 
+| **F11** | **Verificação de Empresa travada: o telefone do CNPJ é antigo** e a ligação/SMS nunca chega — você não consegue concluir (caso real 24/07) | a Meta usa o telefone do **registro público do CNPJ** (Receita), não um número que você digita. Se o cadastro está desatualizado, o código vai para um número que não é mais seu | 1) **primeiro: não pare o resto do trabalho** — a verificação não bloqueia app, token, leitura nem escrita via API ([guia-meta-api](guia-meta-api.md), caixa do passo 1); 2) na tela de verificação procure a opção de **verificar por DOCUMENTO** em vez de telefone (algo como "não reconheço estas informações" / "usar outro método" / "enviar documentos") e suba **cartão CNPJ, contrato social ou comprovante de endereço** da empresa — a Meta analisa em 1+ dias úteis **sem depender do telefone**; 3) ⚠️ o documento precisa bater com o BM: **nome legal e endereço iguais** aos do CNPJ (senão cai no F9); 4) solução de raiz (lenta, dias): atualizar o telefone no cadastro — **MEI** pelo Portal do Empreendedor, demais empresas via Redesim/contador |
+| **F12** | Zelador/relatório acusa **`pagamento_aprovado: false`** e **`STATUS GERAL: CRITICO`** num setup que você acabou de montar | você ainda não cadastrou pagamento (e talvez nem pixel/domínio/página) — o status geral soma itens de **campanha no ar** | **não é defeito.** Se seu objetivo é só testar a API, isso é o esperado: confira os itens individuais de token e conta. Quando for anunciar de verdade, volte ao passo 6 (pagamento) e siga [guia-pixel-capi](guia-pixel-capi.md) |
+
 > Persistiu algo fora do catálogo? Print da tela + "estou preso aqui, pesquise o que fazer" no Claude/Codex — e registre o caso pra virar erro novo deste guia.
 
 ## Pronto. Próximos passos
 
 | Agora | O quê |
 |---|---|
-| ▶️ Fazer | dispare JÁ a Verificação de Empresa (passo 5) se ainda não fez — ela roda em paralelo (1+ dias) e destrava o próximo guia |
-| 📖 Ler | **[guia-meta-api.md](guia-meta-api.md)** (app + System User + token). Depois, na cadeia: [guia-pixel-capi](guia-pixel-capi.md) → [guia-criativos](../04-operacao/guia-criativos.md) → [guia-campanha-no-ar](../04-operacao/guia-campanha-no-ar.md) |
-| 🚑 Se travar | o catálogo F1–F10 acima (conta desativada, limite de BM, pagamento recusado...) |
+| ▶️ Fazer | dispare a Verificação de Empresa (passo 5) se ainda não fez — ela roda em paralelo (1+ dias). **Não espere por ela**: siga direto para o próximo guia |
+| 📖 Ler | **[guia-meta-api.md](guia-meta-api.md)** (app + System User + token — decida lá na seção 0.1 se quer só ler ou também publicar). Depois, na cadeia: [guia-pixel-capi](guia-pixel-capi.md) → [guia-criativos](../04-operacao/guia-criativos.md) → [guia-campanha-no-ar](../04-operacao/guia-campanha-no-ar.md) |
+| 🚑 Se travar | o catálogo F1–F12 acima (conta desativada, limite de BM, pagamento recusado, telefone do CNPJ inalcançável...) |

@@ -42,7 +42,10 @@ node scripts/iniciar-trafego.mjs start --project="<projectRoot>" --json
 ```
 
 - `PROPOSAL_SEED_READY`: prossiga para a proposta.
-- `BLOCKED`: apresente cada pendência estruturada e seu `routeCommand`. Não copie template, não grave painel e não delegue ao aluno a tarefa de lembrar de voltar.
+- `BLOCKED`: apresente cada pendência e advisory estruturado conforme `routeKind`:
+  - `command`: mostre **Comando para executar** e o `routeCommand` em bloco de código;
+  - `guide`: mostre **Encontre este conteúdo aqui:** e cada path completo de `routePath`/`routePaths`.
+  Nunca renderize um guia com `/`, nunca o chame de comando e nunca transforme seu nome curto em slash command. Não copie template, não grave painel e não delegue ao aluno a tarefa de lembrar de voltar.
 - `STALE` ou erro: apresente o código e a ação retomável devolvida pelo worker.
 
 O JSON é a fonte de verdade. Não faça checklist paralelo por leitura manual dos arquivos.

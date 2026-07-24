@@ -31,8 +31,9 @@
 | **Não entendo os TERMOS: BM, pixel, CAPI, GTM, CBO, domínio…** | [02-conhecimento-minimo/guia-conceitos-trafego.md](02-conhecimento-minimo/guia-conceitos-trafego.md) |
 | **O Gerenciador de Anúncios em si: onde clico, status, colunas** | [02-conhecimento-minimo/guia-gerenciador-de-anuncios.md](02-conhecimento-minimo/guia-gerenciador-de-anuncios.md) |
 | **Minha página só existe no MEU computador — como vira site?** | [03-conexoes-e-apis/guia-publicar-pagina.md](03-conexoes-e-apis/guia-publicar-pagina.md) |
-| **Meta do ZERO: BM, Página, conta, pagamento** | [03-conexoes-e-apis/guia-meta-fundacao.md](03-conexoes-e-apis/guia-meta-fundacao.md) (erros F1–F10) |
-| **Token da Meta / app / "o SMS não chega"** | [03-conexoes-e-apis/guia-meta-api.md](03-conexoes-e-apis/guia-meta-api.md) (erros E1–E16) |
+| **Meta do ZERO: BM, Página, conta, pagamento** | [03-conexoes-e-apis/guia-meta-fundacao.md](03-conexoes-e-apis/guia-meta-fundacao.md) (erros F1–F12) |
+| **Token da Meta / app / "o SMS não chega"** | [03-conexoes-e-apis/guia-meta-api.md](03-conexoes-e-apis/guia-meta-api.md) (erros E1–E20) |
+| **Quero só TESTAR a API (ler e publicar) sem investir nada ainda** | [03-conexoes-e-apis/guia-meta-api.md](03-conexoes-e-apis/guia-meta-api.md) seções 0.1 e 0.2 (ler × escrever, e o que dá pra fazer sem gastar) |
 | **Chave do Apify** | [03-conexoes-e-apis/guia-apify.md](03-conexoes-e-apis/guia-apify.md) (erros Y1–Y6) |
 | **Espião automático (Ad Library) / verificação de identidade** | [03-conexoes-e-apis/guia-ad-library.md](03-conexoes-e-apis/guia-ad-library.md) (erros AL1–AL5) |
 | **Engajamento orgânico no painel (tokens de Página/IG)** | [03-conexoes-e-apis/guia-organico-tokens.md](03-conexoes-e-apis/guia-organico-tokens.md) (erros OT1–OT5) |
@@ -41,12 +42,13 @@
 | **Pixel, CAPI, "evento não dispara"** | [03-conexoes-e-apis/guia-pixel-capi.md](03-conexoes-e-apis/guia-pixel-capi.md) (erros T1–T9) |
 | **TODAS as chaves/APIs de uma vez (o índice clique a clique)** | [03-conexoes-e-apis/super-guia-apis-e-ads.md](03-conexoes-e-apis/super-guia-apis-e-ads.md) (Partes A–D; cada pedaço também tem guia próprio acima) |
 | **Gerar os CRIATIVOS (e saírem bons)** | [04-operacao/guia-criativos.md](04-operacao/guia-criativos.md) |
+| **Criativo de IMAGEM por IA (avançado, exige assinatura ChatGPT)** | [04-operacao/guia-ads-creative-factory.md](04-operacao/guia-ads-creative-factory.md) (erros CF1–CF8) |
 | **Colocar a campanha NO AR** | [04-operacao/guia-campanha-no-ar.md](04-operacao/guia-campanha-no-ar.md) |
 | **Campanha no ar… e AGORA?** | [04-operacao/guia-e-depois.md](04-operacao/guia-e-depois.md) |
 | **Rodar a Aula 4 no MEU projeto (com ou sem 30 dias de dados)** | [05-metricas/guia-central-de-dados.md](05-metricas/guia-central-de-dados.md) (erros CD1–CD6) |
 | **O painel da Aula 4: o que ele coleta (e o que NÃO)** | [05-metricas/guia-o-que-e-coletado.md](05-metricas/guia-o-que-e-coletado.md) |
 | **Como LER os números sem me enganar** | [05-metricas/guia-como-ler-os-numeros.md](05-metricas/guia-como-ler-os-numeros.md) (erros LN1–LN6) |
-| **O Marketing Studio (painel visual): tela por tela + o comando equivalente** | [06-studio/guia-studio-como-funciona.md](06-studio/guia-studio-como-funciona.md) (erros ST1–ST7) |
+| **O Marketing Studio (painel visual): tela por tela + o comando equivalente** | [06-studio/guia-studio-como-funciona.md](06-studio/guia-studio-como-funciona.md) (erros ST1–ST9) |
 | **Entender o projeto/repositório inteiro** | [../mapa-guiado-do-projeto.html](../mapa-guiado-do-projeto.html) |
 | **Seguir o curso na ordem** | [../GUIA-DO-ALUNO.html](../GUIA-DO-ALUNO.html) |
 | **Saber o que já fiz e o que falta no MEU funil** | rode `/status-funil` |

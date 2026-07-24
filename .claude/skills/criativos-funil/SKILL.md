@@ -36,13 +36,15 @@ Esta skill parte do output das etapas anteriores do funil. Antes de qualquer coi
 # 1. Descubra o projeto ativo:
 ls projetos/ 2>/dev/null
 # 2. Confira os arquivos dentro do projeto ativo:
-ls projetos/{slug}/offerbook.md projetos/{slug}/DESIGN.md 2>/dev/null
+ls projetos/{slug}/offerbook.md projetos/{slug}/offerbook-*.md projetos/{slug}/DESIGN.md 2>/dev/null
 ```
 
-- Se existir(em), leia deles a oferta (mecanismo único, produto, vilão/inimigo) do `projetos/{slug}/offerbook.md` e a identidade visual (cores, fontes, tom) do `projetos/{slug}/DESIGN.md`.
-- Se FALTAR algum, PARE e exiba um aviso claro apontando qual skill rodar antes:
+> **Offerbook — os dois nomes valem (regra dura).** O `/offerbook` grava tanto `offerbook.md` quanto `offerbook-{slug}.md` conforme o projeto; os dois são o MESMO artefato. Precedência: `offerbook.md` primeiro, senão o primeiro `offerbook-*.md` encontrado (ignorando `briefing-offerbook.md`). **Nunca** mande rodar `/offerbook` de novo quando existir qualquer um dos dois — é o falso bloqueio mais caro desta skill.
 
-> Pra gerar os criativos eu preciso do `projetos/{slug}/offerbook.md` (da skill `/offerbook`) e do `projetos/{slug}/DESIGN.md` (da skill `/design-md`). Rode `/offerbook` e `/design-md` primeiro; quando os dois existirem, volte e rode esta skill de novo.
+- Se existir(em), leia deles a oferta (mecanismo único, produto, vilão/inimigo) do offerbook resolvido acima e a identidade visual (cores, fontes, tom) do `projetos/{slug}/DESIGN.md`.
+- Se FALTAR algum (nenhum offerbook em NENHUM dos dois nomes, ou nenhum DESIGN.md), PARE e exiba um aviso claro apontando qual skill rodar antes:
+
+> Pra gerar os criativos eu preciso do offerbook (`offerbook.md` ou `offerbook-{slug}.md`, da skill `/offerbook`) e do `projetos/{slug}/DESIGN.md` (da skill `/design-md`). Rode `/offerbook` e `/design-md` primeiro; quando os dois existirem, volte e rode esta skill de novo.
 
 Não invente de cabeça o conteúdo que deveria vir da etapa anterior.
 
@@ -146,4 +148,4 @@ Todo entregável sai nos **3 formatos** (`.md` fonte · `.html` com os tokens do
 **Ferramentas específicas desta skill:**
 - **Apify (API REST, com o SEU token)** — coleta com métrica real, via `scripts/apify_scraper.py` da `/conteudo-funil` (chamada direta na `api.apify.com`, só stdlib do Python). Check `APIFY_API_TOKEN` (ou `APIFY_API_KEY` — os dois nomes valem) no `.env`/ambiente; sem token, conta gratuita em apify.com > Settings > API tokens. Só em "Monthly usage hard limit exceeded" (cota mensal) avise e caia pros fallbacks (YouTube raspado da página, Threads via fetch, trilha manual, "métrica não obtida"). Nunca invente número.
 - **Transcrição de áudio (whisper)** — a IA NÃO escuta áudio sozinha. Check `which whisper-cli` ou `pip3 show mlx-whisper` (+ `which ffmpeg`); tendo, transcreva no terminal (`whisper-cli -m <modelo> -l pt -f audio.wav -otxt` ou `mlx_whisper audio.wav --language pt`); faltando, ofereça o setup (pergunte antes) — macOS `brew install whisper-cpp ffmpeg` (+ `pip install mlx-whisper` no Apple Silicon); Windows `winget install ffmpeg` + `pip install faster-whisper` (rode com `python -m faster_whisper` ou script equivalente). Fallback sem instalar nada: transcrição do WhatsApp (segurar a mensagem > transcrever > colar), ditado do celular, ou colar transcrição de qualquer ferramenta.
-- **Chrome (headless)** via `scripts/gerar_png.sh <pasta> [largura] [altura] [prefixo]` — exporta os banners em PNG no tamanho exato do posicionamento (um passe por formato; o tamanho da janela tem que bater com o width/height fixado no HTML, senão corta). Fallback: abrir cada HTML no navegador e capturar screenshot no tamanho do formato.
+- **Chrome (headless)** via `scripts/gerar_png.sh <pasta> [largura] [altura] [prefixo]` — exporta os banners em PNG no tamanho exato do posicionamento (um passe por formato; o tamanho da janela tem que bater com o width/height fixado no HTML, senão corta). No Windows (Git Bash) o script cai no **Edge** quando não há Chrome, converte entrada e saída com `cygpath -m` e usa um `--user-data-dir` temporário (sem ele, com o navegador já aberto, da 2ª peça em diante a captura volta sem gerar arquivo). Fallback: abrir cada HTML no navegador e capturar screenshot no tamanho do formato.

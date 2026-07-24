@@ -2,8 +2,8 @@
 
 > **Estou perdido em:** "abri o Studio e não sei o que cada tela faz, o que preencher, nem o que ele decide sozinho".
 > **O que você vai ter no final:** o mapa COMPLETO do app — cada tela, cada campo, cada botão e cada trava (gate), com a regra que o código aplica. E as 3 leis que valem no painel inteiro.
-> **Fontes cruzadas:** o CÓDIGO real do app (rotas e componentes em `apps/academia-lendaria-ads-studio/src/` — verificado tela a tela em 22/07) · o catálogo de skills embutido nele (as mesmas do chat) · o schema oficial do briefing do projeto.
-> Nota de versão: este guia descreve o app como está no código de 22/07 — recurso que não aparecer pra você é sinal de versão anterior: atualize o repo do Studio (`git pull`) e suba de novo.
+> **Fontes cruzadas:** o CÓDIGO real do app (rotas e componentes em `apps/academia-lendaria-ads-studio/src/` — verificado tela a tela em 22/07; travas, checagens de tracking e modo demo **reconferidas no código em 24/07** em `lib/campaign-plan.ts`, `lib/demo-mode.ts` e `components/traffic-campaign-workspace.tsx`) · o catálogo de skills embutido nele (as mesmas do chat) · o schema oficial do briefing do projeto.
+> Nota de versão: este guia descreve o app como está no código de 24/07 — recurso que não aparecer pra você é sinal de versão anterior: atualize o repo do Studio (`git pull`) e suba de novo.
 
 ## As 3 leis do Studio (valem em TODAS as telas)
 
@@ -27,6 +27,13 @@
 ## Tela 1 — Login
 
 E-mail e senha. Sem conta configurada, o app oferece o **modo demo local** — as credenciais de demonstração aparecem escritas NA PRÓPRIA tela de login (é treino: dados locais, nada vai pra nuvem).
+
+O usuário demo é o `demo@academialendaria.local`. No modo demo **tudo fica no `localStorage` do navegador**, em chaves separadas por assunto (campanhas, economia de unidade, estrutura, briefing criativo, factory, tracking, publicação, monitor). Duas consequências práticas que pegam todo mundo:
+
+- **Limpar os dados do site apaga o seu trabalho de treino.** Não existe cópia na nuvem no modo demo.
+- **Trocar de navegador ou usar aba anônima = projeto vazio.** Não é bug: é outro `localStorage`.
+
+Quando for trabalho de verdade, use conta real — aí o estado vai para o banco e sobrevive à máquina.
 
 ## Tela 2 — Seus projetos (home)
 
@@ -56,6 +63,14 @@ As seções, na ordem do schema oficial: **Projeto · Mercado · Oferta · Marca
 
 O passo a passo visual guiado pelo **catálogo de skills** (por fase do método): cada etapa mostra a skill, o estado (feita/pendente), e permite **rodar a skill dali mesmo** → a proposta volta pra sua revisão → aprovou, vira artefato registrado (lei nº 1). É onde o projeto anda etapa por etapa sem terminal.
 
+Três comportamentos que valem saber antes de usar:
+
+- **A skill pode te barrar antes de rodar.** Se faltar um insumo (um campo do briefing, um artefato anterior), o app não roda e diz o que falta — a mesma recusa que você veria no chat. Resolva onde ele apontar e volte.
+- **Rodar aqui não pula a aprovação.** O resultado sempre volta como proposta; nada entra no projeto sem o seu **Aprovar**.
+- **Modo simulação.** Quando o executor local não está conectado, um banner avisa. Nesse estado o app demonstra o fluxo, mas não é a execução real da skill — para trabalho de verdade, use o app com o executor conectado ou rode a skill no terminal.
+
+É a tela mais extensa do app, e é o equivalente visual de percorrer o funil comando a comando. Se você já opera pelo chat, ela não traz capacidade nova: traz visibilidade do que já foi feito e do que falta.
+
 ## Tela 7 — Campanhas (o coração: 9 estágios com trava)
 
 **"+ Nova campanha"** cria o plano e abre a trilha. Cada estágio só destrava quando o anterior cumpre a regra — os números viram cadeado até lá:
@@ -72,6 +87,35 @@ O passo a passo visual guiado pelo **catálogo de skills** (por fase do método)
 | 8–9 | **Leitura · Alavanca** | atalho pra aba **Semanas** (é lá que a operação semanal vive) | só depois da subida confirmada |
 
 Se uma skill for barrada antes de rodar (pré-requisito faltando), o app diz O QUE falta e te leva pra tela certa (briefing/jornada) — mesma lógica das recusas no chat.
+
+### As travas, na letra do código (pra você saber exatamente o que destrava cada uma)
+
+A barra de estágios no topo mostra **o número** quando o estágio está liberado e um **cadeado** quando não está — clicar num cadeado não faz nada. Cada condição é literalmente esta:
+
+| Estágio | Só abre quando |
+|---|---|
+| Fundamentos | sempre aberto |
+| Zelador | **verba diária ≥ R$ 20** |
+| Briefista | tracking em **OK** ou **PARCIAL** |
+| Curadoria | tracking em **OK** ou **PARCIAL** |
+| Estrutura | tracking **não** é CRÍTICO nem PENDENTE · **2 a 3 finalistas** · verba ≥ R$ 20 (as três juntas) |
+| Criativos | existe estrutura gerada |
+| Subida manual | o pacote criativo está com status **aprovado** |
+| Leitura · Alavanca | sempre acessíveis (levam para a aba Semanas) |
+
+**Como o status do tracking é calculado** — são 7 checagens, e o que separa CRÍTICO de OK não é só marcar "Sim": cada item exige **evidência escrita**. Marcar Sim com o campo de evidência vazio conta como falha.
+
+- **6 são críticas:** BM ativo · conta de anúncios ativa · pixel disparando · CAPI ativo · compra deduplicada · pagamento aprovado.
+- **1 não é crítica:** domínio verificado.
+- Qualquer crítica sem "Sim" **ou** sem evidência → **CRÍTICO** (trava a Estrutura).
+- Todas as críticas OK, só o domínio pendente → **PARCIAL** (você segue, mas com o domínio em aberto).
+- Tudo confirmado com evidência → **OK**.
+
+Por isso o estágio 2 é o mais demorado do app: ele não aceita "confiar que está certo". Cada linha pede o que você VIU na tela da Meta. Os guias que resolvem cada item: [guia-meta-fundacao](../03-conexoes-e-apis/guia-meta-fundacao.md) (BM, conta, pagamento) · [guia-pixel-capi](../03-conexoes-e-apis/guia-pixel-capi.md) (pixel, CAPI, deduplicação) · [guia-publicar-pagina](../03-conexoes-e-apis/guia-publicar-pagina.md) (domínio).
+
+### Quando uma skill devolve proposta
+
+Enquanto houver proposta pendente, ela **ocupa a tela no lugar do conteúdo do estágio**: resumo, o resultado em texto integral, e dois botões — **Aprovar proposta** ou **Rejeitar**. Não dá para seguir sem decidir. É a lei nº 1 aplicada na interface.
 
 ## Tela 8 — Semanas (o Painel da Semana visual)
 
@@ -96,6 +140,8 @@ Suba o app, entre (demo serve), crie um projeto e uma campanha e percorra os est
 | ST5 | "A tela que eu vi na aula era diferente" (wizard de 8 passos) | esse é o fluxo LEGADO — o app te mostra um aviso "etapa legada" com o botão pro fluxo atual | clique em "Ir para campanha unificada"; o fluxo atual é o dos 9 estágios deste guia |
 | ST6 | Recurso deste guia **não aparece** na sua tela | versão anterior do app | `git pull` no repo do Studio → suba de novo; persistiu, print + PS |
 | ST7 | Computador lento depois de usar | app rodando em segundo plano | `node scripts/marketing-studio.mjs stop` → fechar Docker → (Windows) `wsl --shutdown` |
+| ST8 | **Sumiu tudo**: abri o Studio e o projeto/campanha que eu tinha criado não está mais lá | você estava no **modo demo**, que guarda tudo no `localStorage` do navegador. Limpar dados do site, usar aba anônima ou trocar de navegador = outro armazenamento, projeto vazio | 1. confirme se está no MESMO navegador e perfil de antes · 2. não use aba anônima para trabalho que quer manter · 3. para trabalho de verdade, entre com conta real (aí o estado vai pro banco e sobrevive à máquina). Dado de demo apagado não tem recuperação |
+| ST9 | O estágio **Estrutura** continua travado mesmo com o Zelador em OK | são TRÊS condições juntas, não só o tracking: tracking não-crítico **+ 2 a 3 finalistas curados + verba diária ≥ R$ 20** | confira as três: se você curou 1 finalista só (ou 4+), trava; se baixou a verba abaixo de R$ 20 depois de passar pelo estágio 1, trava também |
 
 > A qualquer momento, tudo tem o equivalente no chat: visão geral/jornada = `/status-funil` · gate 2 = `/zelador` · estágios 3–5 = `/briefista` + `/estruturador` · criativos = `/criativos-funil` ou factory · semanas = `/leitor-de-metricas` + `/diagnosticador`.
 
@@ -105,4 +151,4 @@ Suba o app, entre (demo serve), crie um projeto e uma campanha e percorra os est
 |---|---|
 | ▶️ Fazer | suba o app e percorra o teste de sucesso (projeto → campanha → estágios 1–2) — 15 min e o painel vira mapa conhecido |
 | 📖 Ler | a subida real da campanha é sua: [guia-campanha-no-ar](../04-operacao/guia-campanha-no-ar.md) · a leitura da semana: [guia-como-ler-os-numeros](../05-metricas/guia-como-ler-os-numeros.md) |
-| 🚑 Se travar | o catálogo ST1–ST7 acima — e lembre a lei nº 3: tudo tem o comando equivalente no chat |
+| 🚑 Se travar | o catálogo ST1–ST9 acima — e lembre a lei nº 3: tudo tem o comando equivalente no chat |

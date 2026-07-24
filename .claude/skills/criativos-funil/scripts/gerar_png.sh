@@ -90,27 +90,56 @@ if [ ${#ARQUIVOS[@]} -eq 0 ]; then
   exit 1
 fi
 
+# Perfil temporario proprio: sem ele, com um Chrome/Edge ja aberto a captura
+# retorna sem gerar arquivo (da 2a peca do lote em diante) e falha em silencio.
+PROFILE_DIR="$(mktemp -d)"
+# O Edge segura o lockfile do perfil por alguns instantes depois de sair; o || true
+# evita que a limpeza derrube o script (set -e) depois dos PNGs ja terem saido.
+trap 'rm -rf "$PROFILE_DIR" 2>/dev/null || true' EXIT
+PROFILE_ARG="$(cygpath -m "$PROFILE_DIR" 2>/dev/null || echo "$PROFILE_DIR")"
+
+# --default-background-color (fundo transparente) e flag de Chrome: no Edge ela
+# ABORTA a captura e nenhum PNG e escrito. Banner de ad tem fundo opaco, entao
+# fora do Chrome simplesmente nao usamos a flag.
+BG_FLAG=()
+case "$CHROME" in
+  *msedge*|*Edge*) ;;
+  *) BG_FLAG=(--default-background-color=00000000) ;;
+esac
+
 COUNT=0
 for HTML in "${ARQUIVOS[@]}"; do
   BASENAME="$(basename "$HTML" .html)"
   OUT="$DIR_ABS/$BASENAME.png"
   echo "[$((COUNT+1))/${#ARQUIVOS[@]}] $BASENAME.html -> $BASENAME.png"
-  # No Windows o navegador exige file:///C:/... — cygpath -m converte; fora do Git Bash cai no caminho normal.
+  # No Windows o navegador exige C:/... tanto na URL de ENTRADA quanto no caminho
+  # de SAIDA do --screenshot; cygpath -m converte os dois. Fora do Git Bash cai no
+  # caminho normal. Sem converter a saida, o navegador nao escreve o PNG.
   HTML_URL="file://$(cygpath -m "$HTML" 2>/dev/null || echo "$HTML")"
-  "$CHROME" \
-    --headless \
-    --disable-gpu \
-    --no-sandbox \
-    --hide-scrollbars \
-    --default-background-color=00000000 \
-    --force-device-scale-factor=1 \
-    --window-size=${W},${H} \
-    --screenshot="$OUT" \
-    "$HTML_URL" 2>/dev/null || true
+  OUT_ARG="$(cygpath -m "$OUT" 2>/dev/null || echo "$OUT")"
+  # 2 tentativas: rodando um formato logo apos o outro, o navegador anterior ainda
+  # esta encerrando e a 1a captura volta sem escrever o arquivo. 1 retry resolve.
+  for TENTATIVA in 1 2; do
+    ERRO="$("$CHROME" \
+      --headless \
+      --disable-gpu \
+      --no-sandbox \
+      --hide-scrollbars \
+      "${BG_FLAG[@]}" \
+      --force-device-scale-factor=1 \
+      --user-data-dir="$PROFILE_ARG" \
+      --window-size=${W},${H} \
+      --screenshot="$OUT_ARG" \
+      "$HTML_URL" 2>&1)" || true
+    [ -f "$OUT" ] && break
+    [ "$TENTATIVA" = "1" ] && sleep 2
+  done
   if [ -f "$OUT" ]; then
     COUNT=$((COUNT+1))
   else
     echo "  ! falhou: $BASENAME"
+    # Nunca engolir o motivo: sem isto o aluno so ve "falhou" e nao tem o que pesquisar.
+    [ -n "$ERRO" ] && echo "$ERRO" | tail -3 | sed 's/^/    /'
   fi
 done
 
